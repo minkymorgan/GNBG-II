@@ -11,6 +11,7 @@ pub mod memory_pool;
 pub mod pipeline;
 pub mod builder;
 pub mod mo_problem;
+#[cfg(feature = "python")]
 pub mod pymoo_interface;
 
 // Re-export main types for convenience
@@ -20,6 +21,7 @@ pub use mo_problem::GNBGMultiObjective;
 pub use position_distance::{PositionDistanceSplitter, SplitStrategy};
 pub use transformations::TransformationType;
 pub use shapes::ShapeFunction;
+#[cfg(feature = "python")]
 pub use pymoo_interface::PyMOOGNBGProblem;
 
 /// Multi-objective specific error types

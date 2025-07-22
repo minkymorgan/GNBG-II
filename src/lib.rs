@@ -33,4 +33,6 @@ pub use cpu_reference::*;
 pub use file_loader::*;
 
 // Re-export multi-objective types for convenience
-pub use multi_objective::{GNBGMOBuilder, GNBGMultiObjective, OptimizationTarget, PyMOOGNBGProblem};
+pub use multi_objective::{GNBGMOBuilder, GNBGMultiObjective, OptimizationTarget};
+#[cfg(feature = "python")]
+pub use multi_objective::PyMOOGNBGProblem;

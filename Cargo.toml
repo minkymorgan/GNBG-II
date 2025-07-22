@@ -18,17 +18,23 @@ env_logger = "0.11"
 log = "0.4"
 rand = "0.8"
 tokio = { version = "1", features = ["full"] }
-pyo3 = { version = "0.20", features = ["extension-module"] }
-pyo3-asyncio = { version = "0.20", features = ["tokio-runtime"] }
-numpy = "0.20"
+
+# Python dependencies only when python feature is enabled
+pyo3 = { version = "0.20", features = ["extension-module"], optional = true }
+pyo3-asyncio = { version = "0.20", features = ["tokio-runtime"], optional = true }
+numpy = { version = "0.20", optional = true }
 
 [[example]]
 name = "gpu_integration_demo"
 path = "examples/gpu_integration_demo.rs"
+
+[[example]]
+name = "multi_objective_demo"
+path = "examples/multi_objective_demo.rs"
 
 [dev-dependencies]
 approx = "0.5"
 
 [features]
 default = []
-python = ["pyo3/extension-module"]
+python = ["pyo3/extension-module", "pyo3-asyncio", "numpy"]
