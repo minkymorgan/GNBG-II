@@ -206,7 +206,11 @@ impl GNBGGpu {
 }
 
 #[pymodule]
-fn gnbg_gpu(_py: Python, m: &PyModule) -> PyResult<()> {
+fn gnbg_gpu(py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<GNBGGpu>()?;
+    
+    // Add multi-objective PyMOO interface
+    crate::multi_objective::pymoo_interface::register_pymoo_module(py, m)?;
+    
     Ok(())
 }
