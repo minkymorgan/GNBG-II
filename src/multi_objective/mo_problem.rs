@@ -8,6 +8,7 @@ use crate::multi_objective::{
     transformations::TransformationPipeline,
     shapes::ShapeFunctionExecutor,
 };
+use crate::gpu_context::GpuContext;
 
 /// Multi-objective GNBG problem
 pub struct GNBGMultiObjective {
@@ -23,9 +24,41 @@ pub struct GNBGMultiObjective {
     pub shape_executor: ShapeFunctionExecutor,
     /// Use GPU acceleration
     pub use_gpu: bool,
+    /// Shared GPU context for acceleration
+    pub gpu_context: Option<GpuContext>,
 }
 
 impl GNBGMultiObjective {
+    /// Initialize GPU context for acceleration
+    /// 
+    /// This should be called once before any GPU operations.
+    /// Reuses the shared GPU context infrastructure from the main GNBG executor.
+    pub async fn initialize_gpu(&mut self) -> Result<()> {
+        if self.use_gpu && self.gpu_context.is_none() {
+            let context = GpuContext::new().await
+                .map_err(|e| GNBGMOError::GpuExecutionError(
+                    format!("Failed to initialize GPU context: {}", e)
+                ))?;
+            
+            log::info!("Initialized GPU context for multi-objective evaluation: {}", 
+                      context.adapter_info().name);
+                      
+            self.gpu_context = Some(context);
+        }
+        Ok(())
+    }
+    
+    /// Get the GPU context, initializing if necessary
+    pub async fn get_gpu_context(&mut self) -> Result<Option<&GpuContext>> {
+        if self.use_gpu {
+            if self.gpu_context.is_none() {
+                self.initialize_gpu().await?;
+            }
+            Ok(self.gpu_context.as_ref())
+        } else {
+            Ok(None)
+        }
+    }
     /// Evaluate a batch of solutions
     /// 
     /// # Arguments
@@ -33,7 +66,7 @@ impl GNBGMultiObjective {
     /// 
     /// # Returns  
     /// * Flattened array of objectives [sol1_obj1, sol1_obj2, ..., sol2_obj1, ...]
-    pub async fn evaluate_batch(&self, solutions: &[f32]) -> Result<Vec<f32>> {
+    pub async fn evaluate_batch(&mut self, solutions: &[f32]) -> Result<Vec<f32>> {
         let n_solutions = solutions.len() / self.dimension as usize;
         
         if solutions.len() != (n_solutions * self.dimension as usize) {
@@ -50,21 +83,34 @@ impl GNBGMultiObjective {
     }
     
     /// GPU-accelerated batch evaluation
-    async fn evaluate_batch_gpu(&self, solutions: &[f32], n_solutions: usize) -> Result<Vec<f32>> {
+    async fn evaluate_batch_gpu(&mut self, solutions: &[f32], n_solutions: usize) -> Result<Vec<f32>> {
+        // Ensure GPU context is initialized and get a reference
+        self.initialize_gpu().await?;
+        let gpu_context = self.gpu_context.as_ref()
+            .ok_or_else(|| GNBGMOError::GpuExecutionError(
+                "GPU context not available".to_string()
+            ))?;
+            
         // Step 1: Split position and distance variables
         let (position_vars, distance_vars) = self.splitter.split_variables(solutions)?;
+        let n_position = self.splitter.n_position();
         
         // Step 2: Transform distance variables (GPU)
-        let transformed_distances = self.transformation_pipeline
-            .apply_gpu_batch(&distance_vars, self.splitter.n_position())
-            .await?;
+        let transformed_distances = if !distance_vars.is_empty() {
+            self.transformation_pipeline
+                .apply_gpu_batch(&distance_vars, n_position, gpu_context)
+                .await?
+        } else {
+            // No distance variables, create dummy transformed distances
+            vec![1.0; n_solutions] // Default scaling factor
+        };
         
         // Step 3: Combine transformed distances (reduction operation)
         let combined_distances = self.combine_distance_variables(&transformed_distances, n_solutions)?;
         
         // Step 4: Apply shape functions to position variables (GPU)
         let raw_objectives = self.shape_executor
-            .apply_gpu(&position_vars, self.splitter.n_position())
+            .apply_gpu(&position_vars, n_position, gpu_context)
             .await?;
         
         // Step 5: Scale objectives by distance variables
@@ -97,7 +143,7 @@ impl GNBGMultiObjective {
     }
     
     /// Evaluate a single solution
-    pub async fn evaluate_single(&self, solution: &[f32]) -> Result<Vec<f32>> {
+    pub async fn evaluate_single(&mut self, solution: &[f32]) -> Result<Vec<f32>> {
         if solution.len() != self.dimension as usize {
             return Err(GNBGMOError::InvalidConfiguration(
                 "Solution dimension mismatch".to_string()
@@ -180,7 +226,7 @@ mod tests {
     
     #[tokio::test]
     async fn test_mo_problem_evaluation() {
-        let problem = GNBGMOBuilder::new()
+        let mut problem = GNBGMOBuilder::new()
             .dimension(5)
             .objectives(2)
             .split_strategy(SplitStrategy::WFGStandard)
@@ -205,7 +251,7 @@ mod tests {
     
     #[tokio::test]
     async fn test_mo_problem_batch_evaluation() {
-        let problem = GNBGMOBuilder::new()
+        let mut problem = GNBGMOBuilder::new()
             .dimension(4)
             .objectives(3)
             .gpu(false) // Use CPU for testing

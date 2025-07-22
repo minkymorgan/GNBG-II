@@ -28,7 +28,7 @@ impl EvaluationPipeline {
     }
     
     /// Evaluate solutions through the complete pipeline
-    pub async fn evaluate(&self, solutions: &[f32]) -> Result<Vec<f32>> {
+    pub async fn evaluate(&mut self, solutions: &[f32]) -> Result<Vec<f32>> {
         self.problem.evaluate_batch(solutions).await
     }
     
@@ -57,7 +57,7 @@ mod tests {
             .build()
             .unwrap();
             
-        let pipeline = EvaluationPipeline::new(problem);
+        let mut pipeline = EvaluationPipeline::new(problem);
         
         assert_eq!(pipeline.dimension(), 5);
         assert_eq!(pipeline.n_objectives(), 2);

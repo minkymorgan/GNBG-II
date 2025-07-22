@@ -21,6 +21,10 @@ tokio = { version = "1", features = ["full"] }
 pyo3 = { version = "0.20", features = ["extension-module"] }
 numpy = "0.20"
 
+[[example]]
+name = "gpu_integration_demo"
+path = "examples/gpu_integration_demo.rs"
+
 [dev-dependencies]
 approx = "0.5"
 

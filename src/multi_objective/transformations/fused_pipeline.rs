@@ -4,6 +4,7 @@
 /// for optimal performance (2-3x speedup over separate kernels)
 
 use crate::multi_objective::{GNBGMOError, Result};
+use crate::gpu_context::GpuContext;
 use super::{TransformationPipeline, TransformationType, VariableRange};
 use wgpu::util::DeviceExt;
 

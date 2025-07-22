@@ -88,7 +88,7 @@ impl GNBGMOBuilder {
     
     /// Create WFG1-style problem preset
     pub fn wfg1_preset(dimension: u32, n_objectives: u32) -> Self {
-        Self::new()
+        let mut builder = Self::new()
             .dimension(dimension)
             .objectives(n_objectives)
             .split_strategy(SplitStrategy::WFGStandard)
@@ -99,13 +99,19 @@ impl GNBGMOBuilder {
             .add_transformation(
                 TransformationType::MultiModal { A: 10.0, B: 0.35, C: 0.05 },
                 VariableRange::Distance,
-            )
-            .add_shape(ShapeFunction::Convex)
+            );
+        
+        // Add convex shape functions for all objectives
+        for _ in 0..n_objectives {
+            builder = builder.add_shape(ShapeFunction::Convex);
+        }
+        
+        builder
     }
     
     /// Create WFG2-style problem preset  
     pub fn wfg2_preset(dimension: u32, n_objectives: u32) -> Self {
-        Self::new()
+        let mut builder = Self::new()
             .dimension(dimension)
             .objectives(n_objectives)
             .split_strategy(SplitStrategy::WFGStandard)
@@ -116,13 +122,19 @@ impl GNBGMOBuilder {
             .add_transformation(
                 TransformationType::NonSeparable { A: 2 },
                 VariableRange::Distance,
-            )
-            .add_shape(ShapeFunction::Convex)
+            );
+        
+        // Add convex shape functions for all objectives
+        for _ in 0..n_objectives {
+            builder = builder.add_shape(ShapeFunction::Convex);
+        }
+        
+        builder
     }
     
     /// Create WFG3-style problem preset
     pub fn wfg3_preset(dimension: u32, n_objectives: u32) -> Self {
-        Self::new()
+        let mut builder = Self::new()
             .dimension(dimension)
             .objectives(n_objectives)
             .split_strategy(SplitStrategy::WFGStandard)
@@ -133,8 +145,14 @@ impl GNBGMOBuilder {
             .add_transformation(
                 TransformationType::NonSeparable { A: 2 },
                 VariableRange::Distance,
-            )
-            .add_shape(ShapeFunction::Linear)
+            );
+        
+        // Add linear shape functions for all objectives
+        for _ in 0..n_objectives {
+            builder = builder.add_shape(ShapeFunction::Linear);
+        }
+        
+        builder
     }
     
     /// Build the multi-objective problem
@@ -201,6 +219,7 @@ impl GNBGMOBuilder {
             transformation_pipeline: pipeline,
             shape_executor,
             use_gpu: self.use_gpu,
+            gpu_context: None, // Will be initialized on first use
         })
     }
 }
