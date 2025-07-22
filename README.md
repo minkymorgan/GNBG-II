@@ -353,18 +353,20 @@ GNBG-II/
 
 ## 📄 License
 
-This project is licensed under the GNU General Public License v3.0, maintaining consistency with the original GNBG-II benchmark suite. GPU acceleration enhancements are provided as open-source contributions under the same GPL v3.0 terms.
+This project is licensed under the GNU General Public License v3.0, maintaining consistency with the original GNBG-II benchmark suite.
 
 **Original GNBG-II Authors:**
 - Danial Yazdani (danial.yazdani@gmail.com) - Copyright (c) 2023
 - Vladimir Stanovov (vladimirstanovov@yandex.ru) - C++ Implementation (2024)
 
+**GPU Acceleration Implementation:**
+- Andrew Morgan <minkymorgan@gmail.com> - Rust GPU Implementation and Python Bindings (2025)
+
 ## 🙏 Acknowledgments
 
-- Original GNBG-II benchmark suite creators
+- Original GNBG-II benchmark suite creators (Danial Yazdani, Vladimir Stanovov)
 - WebGPU and wgpu-rs communities for GPU compute foundations
 - PyO3 team for seamless Rust-Python integration
-- Claude Code for GPU optimization and integration development
 
 ## 📞 Support
 
