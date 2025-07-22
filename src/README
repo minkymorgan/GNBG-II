@@ -1,0 +1,18 @@
+This implementation:
+
+Preserves the exact C++ algorithm - all transformations and calculations match
+Handles file I/O correctly - reads the C++ format files
+Provides CPU reference - for validation against C++ results
+GPU acceleration - uses wgpu compute shaders
+No silent failures - explicit error handling everywhere
+Clear data flow - from problem definition to GPU buffers
+
+Key design decisions:
+
+Used f64 for CPU to match C++ precision exactly
+Used f32 for GPU (standard for GPU compute)
+Flattened arrays for GPU memory efficiency
+Explicit padding in structs for alignment
+Workgroup size of 64 (tunable based on GPU)
+
+The main challenge was the rotation matrix storage order difference between C++ and the file format - I've handled this in the file loader.

@@ -1,0 +1,43 @@
+.env
+
+# Rust
+/target/
+Cargo.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Extracted archives (temporary)
+C_Implementation/
+MATLAB_Implementation/
+Python_Implementation/
+Winner_Algorithms/
+
+# Test files
+test_*.py
+!test_working_problems.py
+
+# IDE
+.vscode/
+.idea/
