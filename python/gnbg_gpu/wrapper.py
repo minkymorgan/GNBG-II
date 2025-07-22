@@ -5,9 +5,15 @@ Python wrapper for GNBG-GPU that provides a compatible interface with the origin
 import numpy as np
 from typing import Union, Optional, Tuple
 try:
-    from gnbg_gpu import GNBGGpu  # Compiled Rust module  
+    # Import from the compiled Rust module (gnbg_gpu.cpython-311-darwin.so in same directory)
+    from .gnbg_gpu import GNBGGpu
 except ImportError:
-    raise ImportError("GNBG-GPU Rust module not found. Please build with 'maturin develop --features python'")
+    try:
+        # Alternative: try direct import if installed globally
+        import gnbg_gpu as _rust_module
+        GNBGGpu = _rust_module.GNBGGpu
+    except ImportError:
+        raise ImportError("GNBG-GPU Rust module not found. Please build with 'maturin develop --features python'")
 
 
 class GNBG:

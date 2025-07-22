@@ -240,7 +240,7 @@ impl GpuExecutor {
             compute_pass.set_pipeline(&self.pipeline);
             compute_pass.set_bind_group(0, &bind_group, &[]);
             
-            let workgroups = (n_solutions + 63) / 64; // 64 = workgroup size
+            let workgroups = (n_solutions + 255) / 256; // 256 = optimized workgroup size
             compute_pass.dispatch_workgroups(workgroups, 1, 1);
         }
         
