@@ -1,23 +1,15 @@
----
-title: "GPU-Accelerated Multi-Objective Extension of GNBG: A Research Proposal"
-subtitle: "Leveraging Modern GPU Architecture for Extreme Many-Objective Optimization Benchmarking"
-author: 
-  - name: "Andrew James Morgan"
-    affiliation: "Unaffiliated"
-    email: "[minkymorgan@gmail.com]"
-date: today
-format:
-  pdf:
-    documentclass: article
-    papersize: letter
-    mainfont: "Times New Roman"
-    fontsize: 11pt
-    geometry:
-      - margin=1in
-abstract: |
-  The Generalized Numerical Benchmark Generator (GNBG) has proven invaluable for systematic evaluation of single-objective optimization algorithms through its parametric control of problem characteristics. However, the field of multi-objective optimization, particularly extreme many-objective optimization (10-15,000 objectives), lacks similarly controllable benchmark generators. This proposal outlines a research project to: (1) implement GNBG in Rust using WebGPU (wgpu) for massive GPU parallelization, and (2) extend GNBG to multi-objective optimization while maintaining its core strengths of controllable problem characteristics. The GPU implementation will enable benchmarking at unprecedented scales, supporting research into hyperspherical fitness functions and other novel approaches for extreme many-objective optimization. We demonstrate how GNBG's component-based architecture naturally maps to GPU compute shaders, potentially achieving 100-1000x speedups over CPU implementations.
-keywords: [GNBG, Multi-objective Optimization, GPU Computing, WebGPU, Benchmarking, Many-objective Optimization]
----
+# GPU-Accelerated Multi-Objective Extension of GNBG: A Research Proposal
+
+**Leveraging Modern GPU Architecture for Extreme Many-Objective Optimization Benchmarking**
+
+**Author:** Andrew James Morgan <minkymorgan@gmail.com>  
+**Date:** January 2025
+
+## Abstract
+
+The Generalized Numerical Benchmark Generator (GNBG) has proven invaluable for systematic evaluation of single-objective optimization algorithms through its parametric control of problem characteristics. However, the field of multi-objective optimization, particularly extreme many-objective optimization (10-15,000 objectives), lacks similarly controllable benchmark generators. This proposal outlines a research project to: (1) implement GNBG in Rust using WebGPU (wgpu) for massive GPU parallelization, and (2) extend GNBG to multi-objective optimization while maintaining its core strengths of controllable problem characteristics. The GPU implementation will enable benchmarking at unprecedented scales, supporting research into hyperspherical fitness functions and other novel approaches for extreme many-objective optimization. We demonstrate how GNBG's component-based architecture naturally maps to GPU compute shaders, potentially achieving 100-1000x speedups over CPU implementations.
+
+**Keywords:** GNBG, Multi-objective Optimization, GPU Computing, WebGPU, Benchmarking, Many-objective Optimization
 
 # Introduction
 

@@ -1,23 +1,15 @@
----
-title: "GPU-Accelerated Multi-Objective Extension of GNBG: Progress Report and Collaboration Proposal"
-subtitle: "Demonstrating GPU Implementation Success and Proposing Multi-Objective Collaboration"
-author: 
-  - name: "Andrew James Morgan"
-    affiliation: "Unaffiliated"
-    email: "[minkymorgan@gmail.com]"
-date: today
-format:
-  pdf:
-    documentclass: article
-    papersize: letter
-    mainfont: "Times New Roman"
-    fontsize: 11pt
-    geometry:
-      - margin=1in
-abstract: |
-  We have successfully implemented a GPU-accelerated version of the Generalized Numerical Benchmark Generator (GNBG) using Rust and WebGPU, achieving 6.8-12.1x performance improvements over CPU implementations while maintaining perfect numerical consistency. This progress report demonstrates the feasibility and success of GPU acceleration for GNBG evaluation, validating our core architectural approach. We now propose collaboration with the original GNBG authors to extend this foundation toward multi-objective optimization (GNBG-MO), which would address critical gaps in extreme many-objective benchmarking (100-15,000 objectives). Our implementation provides a solid foundation for this extension while respecting the original design principles and maintaining compatibility. This work directly supports our research into novel hyperspherical fitness algorithms that require extreme-scale benchmarking capabilities. We invite the GNBG community to collaborate on this natural evolution of the framework.
-keywords: [GNBG, Multi-objective Optimization, GPU Computing, WebGPU, Benchmarking, Many-objective Optimization]
----
+# GPU-Accelerated Multi-Objective Extension of GNBG: Progress Report and Collaboration Proposal
+
+**Demonstrating GPU Implementation Success and Proposing Multi-Objective Collaboration**
+
+**Author:** Andrew James Morgan <minkymorgan@gmail.com>  
+**Date:** January 2025
+
+## Abstract
+
+We have successfully implemented a GPU-accelerated version of the Generalized Numerical Benchmark Generator (GNBG) using Rust and WebGPU, achieving 6.8-12.1x performance improvements over CPU implementations while maintaining perfect numerical consistency. This progress report demonstrates the feasibility and success of GPU acceleration for GNBG evaluation, validating our core architectural approach. We now propose collaboration with the original GNBG authors to extend this foundation toward multi-objective optimization (GNBG-MO), which would address critical gaps in extreme many-objective benchmarking (100-15,000 objectives). Our implementation provides a solid foundation for this extension while respecting the original design principles and maintaining compatibility. This work directly supports our research into novel hyperspherical fitness algorithms that require extreme-scale benchmarking capabilities. We invite the GNBG community to collaborate on this natural evolution of the framework.
+
+**Keywords:** GNBG, Multi-objective Optimization, GPU Computing, WebGPU, Benchmarking, Many-objective Optimization
 
 # Introduction
 
