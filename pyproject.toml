@@ -29,6 +29,7 @@ classifiers = [
 
 dependencies = [
     "numpy>=1.20.0",
+    "pymoo>=0.6.0",
 ]
 
 [project.optional-dependencies]

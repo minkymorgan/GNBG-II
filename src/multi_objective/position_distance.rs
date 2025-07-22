@@ -74,6 +74,18 @@ impl PositionDistanceSplitter {
             });
         }
         
+        // Debug: Check if solutions are in expected range
+        if solutions.len() > 0 {
+            let first_sol = &solutions[0..self.n_total as usize];
+            if first_sol.iter().any(|&x| x < -1.0 || x > 2.0) {
+                log::error!("SPLITTER BUG: Received unnormalized values!");
+                log::error!("  First solution: {:?}", first_sol);
+                log::error!("  Values should be in [0,1] range");
+            }
+            // Always log the first few values for debugging
+            log::error!("SPLITTER DEBUG: First solution: {:?}", first_sol);
+        }
+        
         let mut position_vars = Vec::with_capacity(n_solutions * self.n_position as usize);
         let mut distance_vars = Vec::with_capacity(n_solutions * self.n_distance as usize);
         
@@ -101,17 +113,11 @@ impl PositionDistanceSplitter {
         let n_position = Self::compute_k(n_variables, n_objectives, &strategy)?;
         let n_distance = n_variables - n_position;
         
-        // Validation
-        if n_position >= n_variables {
+        // Validation - allow n_distance to be 0 for special cases
+        if n_position > n_variables {
             return Err(GNBGMOError::InvalidConfiguration(
-                format!("Position variables ({}) must be less than total variables ({})", 
+                format!("Position variables ({}) cannot exceed total variables ({})", 
                        n_position, n_variables)
-            ));
-        }
-        
-        if n_distance == 0 {
-            return Err(GNBGMOError::InvalidConfiguration(
-                "At least one distance variable is required".to_string()
             ));
         }
         

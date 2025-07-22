@@ -61,14 +61,31 @@ impl ShapeFunctionExecutor {
         let n_solutions = position_vars.len() / n_position as usize;
         let mut objectives = Vec::with_capacity(n_solutions * self.n_objectives as usize);
         
+        // Debug check
+        if n_position == 0 {
+            return Err(GNBGMOError::InvalidConfiguration(
+                "n_position cannot be zero".to_string()
+            ));
+        }
+        
         for sol_idx in 0..n_solutions {
             let sol_start = sol_idx * n_position as usize;
             let sol_end = sol_start + n_position as usize;
+            
+            if sol_end > position_vars.len() {
+                return Err(GNBGMOError::InvalidConfiguration(
+                    format!("Invalid position variable range: {} > {}", sol_end, position_vars.len())
+                ));
+            }
+            
             let position = &position_vars[sol_start..sol_end];
             
             // Apply each shape function
             for (obj_idx, shape_fn) in self.shape_functions.iter().enumerate() {
                 let obj_value = self.compute_shape_value(shape_fn, position, obj_idx)?;
+                if !obj_value.is_finite() {
+                    log::warn!("Non-finite shape value: sol={}, obj={}, value={}", sol_idx, obj_idx, obj_value);
+                }
                 objectives.push(obj_value);
             }
         }

@@ -90,9 +90,21 @@ impl GNBGMultiObjective {
             .ok_or_else(|| GNBGMOError::GpuExecutionError(
                 "GPU context not available".to_string()
             ))?;
+        
+        // Step 0: Normalize solutions from [-100, 100] to [0, 1]
+        let normalized_solutions: Vec<f32> = solutions.iter()
+            .map(|&x| ((x + 100.0) / 200.0).clamp(0.0, 1.0))
+            .collect();
+        
+        // Debug: check for out-of-range values
+        for (i, &x) in solutions.iter().enumerate().take(10) {
+            if x < -100.0 || x > 100.0 {
+                log::warn!("Solution value out of bounds: idx={}, value={}", i, x);
+            }
+        }
             
         // Step 1: Split position and distance variables
-        let (position_vars, distance_vars) = self.splitter.split_variables(solutions)?;
+        let (position_vars, distance_vars) = self.splitter.split_variables(&normalized_solutions)?;
         let n_position = self.splitter.n_position();
         
         // Step 2: Transform distance variables (GPU)
@@ -121,23 +133,64 @@ impl GNBGMultiObjective {
     
     /// CPU batch evaluation (fallback/debug)
     fn evaluate_batch_cpu(&self, solutions: &[f32], n_solutions: usize) -> Result<Vec<f32>> {
+        // Step 0: Normalize solutions from [-100, 100] to [0, 1]
+        let normalized_solutions: Vec<f32> = solutions.iter()
+            .map(|&x| ((x + 100.0) / 200.0).clamp(0.0, 1.0))
+            .collect();
+        
+        // Debug: Log first solution's normalization
+        if n_solutions > 0 && solutions.len() >= self.dimension as usize {
+            let first_sol = &solutions[0..self.dimension as usize];
+            let first_norm = &normalized_solutions[0..self.dimension as usize];
+            if first_sol.iter().any(|&x| x <= -99.0) {
+                log::debug!("Normalizing solution with very negative values:");
+                log::debug!("  Raw: {:?}", first_sol);
+                log::debug!("  Normalized: {:?}", first_norm);
+            }
+        }
+        
         // Step 1: Split position and distance variables
-        let (position_vars, distance_vars) = self.splitter.split_variables(solutions)?;
+        let (position_vars, distance_vars) = self.splitter.split_variables(&normalized_solutions)?;
         
         // Step 2: Transform distance variables (CPU)
         let mut transformed_distances = distance_vars.clone();
-        self.transformation_pipeline
-            .apply_cpu(&mut transformed_distances, self.splitter.n_position() as usize)?;
+        if !transformed_distances.is_empty() {
+            // Debug: Check distance vars before transformation
+            if transformed_distances.iter().any(|&x| x < 0.0 || x > 1.0) {
+                log::error!("Distance variables outside [0,1] before transformation!");
+                log::error!("  First few values: {:?}", &transformed_distances[..transformed_distances.len().min(5)]);
+            }
+            
+            self.transformation_pipeline
+                .apply_cpu(&mut transformed_distances, self.splitter.n_position() as usize)?;
+        }
         
         // Step 3: Combine transformed distances
         let combined_distances = self.combine_distance_variables(&transformed_distances, n_solutions)?;
+        
+        // Debug: Check for unusual values
+        if combined_distances.iter().any(|&x| x < 0.0 || x > 100.0) {
+            log::warn!("Unusual combined distances: {:?}", combined_distances);
+        }
         
         // Step 4: Apply shape functions to position variables (CPU)
         let raw_objectives = self.shape_executor
             .apply_cpu(&position_vars, self.splitter.n_position())?;
         
+        // Debug: Check raw objectives
+        if raw_objectives.iter().any(|&x| !x.is_finite()) {
+            log::warn!("Non-finite raw objectives: {:?}", raw_objectives);
+        }
+        
         // Step 5: Scale objectives by distance variables
         let scaled_objectives = self.scale_objectives(&raw_objectives, &combined_distances)?;
+        
+        // Debug: Check final objectives
+        if scaled_objectives.iter().any(|&x| !x.is_finite() || x < -1.0) {
+            log::warn!("Unusual scaled objectives: {:?}", scaled_objectives);
+            log::warn!("  Raw objectives were: {:?}", raw_objectives);
+            log::warn!("  Combined distances were: {:?}", combined_distances);
+        }
         
         Ok(scaled_objectives)
     }
@@ -161,9 +214,16 @@ impl GNBGMultiObjective {
     fn combine_distance_variables(&self, distances: &[f32], n_solutions: usize) -> Result<Vec<f32>> {
         let n_distance = self.splitter.n_distance() as usize;
         
+        // Handle case where there are no distance variables
+        if n_distance == 0 {
+            // Return default scaling factors
+            return Ok(vec![1.0; n_solutions]);
+        }
+        
         if distances.len() != n_solutions * n_distance {
             return Err(GNBGMOError::InvalidConfiguration(
-                "Distance variable array size mismatch".to_string()
+                format!("Distance variable array size mismatch: expected {}, got {}",
+                       n_solutions * n_distance, distances.len())
             ));
         }
         
@@ -175,13 +235,18 @@ impl GNBGMultiObjective {
             let sol_distances = &distances[sol_start..sol_end];
             
             // Simple averaging for now - could use more sophisticated combination
-            let avg_distance = if n_distance > 0 {
-                sol_distances.iter().sum::<f32>() / n_distance as f32
+            let avg_distance = sol_distances.iter()
+                .filter(|&&x| x.is_finite())
+                .sum::<f32>() / n_distance as f32;
+            
+            // Ensure valid scaling factor
+            let scale = if avg_distance.is_finite() {
+                (1.0 + avg_distance).max(0.1) // Minimum scale of 0.1
             } else {
-                1.0
+                1.0 // Default scale if averaging fails
             };
             
-            combined.push(1.0 + avg_distance); // Offset to avoid zero scaling
+            combined.push(scale);
         }
         
         Ok(combined)
@@ -206,7 +271,19 @@ impl GNBGMultiObjective {
             
             for obj_idx in 0..self.n_objectives as usize {
                 let raw_obj = objectives[obj_start + obj_idx];
-                scaled.push(raw_obj * scale_factor);
+                let scaled_obj = raw_obj * scale_factor;
+                
+                // Ensure finite result
+                let final_obj = if scaled_obj.is_finite() {
+                    scaled_obj
+                } else {
+                    log::warn!("Non-finite scaled objective: raw={}, scale={}, result={}", 
+                              raw_obj, scale_factor, scaled_obj);
+                    // Use raw objective if scaling produces non-finite
+                    raw_obj
+                };
+                
+                scaled.push(final_obj);
             }
         }
         

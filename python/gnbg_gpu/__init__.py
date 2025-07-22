@@ -19,10 +19,26 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from .wrapper import GNBG, create_gnbg_suite
 
 try:
-    from .gnbg_gpu import GNBGGpu  # This will be the compiled Rust module
+    from .gnbg_gpu import GNBGGpu  # Single-objective GPU evaluator
+    # Import multi-objective components from the compiled Rust module
+    from .gnbg_gpu import pymoo_interface
+    GNBGMultiObjectiveProblem = pymoo_interface.GNBGMultiObjectiveProblem
+    create_gnbg_problem = pymoo_interface.create_gnbg_problem
+    check_algorithm_compatibility = pymoo_interface.check_algorithm_compatibility
+    estimate_performance = pymoo_interface.estimate_performance
+    _rust_module_available = True
 except ImportError:
-    # If the compiled module isn't available, create a placeholder
+    # If the compiled module isn't available, create placeholders
     GNBGGpu = None
+    GNBGMultiObjectiveProblem = None
+    create_gnbg_problem = None
+    check_algorithm_compatibility = None
+    estimate_performance = None
+    _rust_module_available = False
 
-__all__ = ['GNBG', 'GNBGGpu', 'create_gnbg_suite']
+__all__ = [
+    'GNBG', 'GNBGGpu', 'create_gnbg_suite',
+    'GNBGMultiObjectiveProblem', 'create_gnbg_problem', 
+    'check_algorithm_compatibility', 'estimate_performance'
+]
 __version__ = '0.1.0'

@@ -221,6 +221,12 @@ impl PyMOOGNBGProblem {
     fn __str__(&self) -> String {
         self.__repr__()
     }
+    
+    /// PyMOO compatibility: indicate that the problem has bounds
+    #[getter]
+    fn has_bounds(&self) -> bool {
+        true  // GNBG problems always have bounds [-100, 100]
+    }
 }
 
 /// Factory function to create problems from configuration dictionaries
