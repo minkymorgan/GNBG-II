@@ -7,7 +7,7 @@
 
 ## Abstract
 
-The Generalized Numerical Benchmark Generator (GNBG) has proven invaluable for systematic evaluation of single-objective optimization algorithms through its parametric control of problem characteristics. However, the field of multi-objective optimization, particularly extreme many-objective optimization (10-15,000 objectives), lacks similarly controllable benchmark generators. This proposal outlines a research project to: (1) implement GNBG in Rust using WebGPU (wgpu) for massive GPU parallelization, and (2) extend GNBG to multi-objective optimization while maintaining its core strengths of controllable problem characteristics. The GPU implementation will enable benchmarking at unprecedented scales, supporting research into hyperspherical fitness functions and other novel approaches for extreme many-objective optimization. We demonstrate how GNBG's component-based architecture naturally maps to GPU compute shaders, potentially achieving 100-1000x speedups over CPU implementations.
+The Generalized Numerical Benchmark Generator (GNBG) has proven invaluable for systematic evaluation of single-objective optimization algorithms through its parametric control of problem characteristics. However, the field of multi-objective optimization, particularly extreme many-objective optimization (10-15,000 objectives), lacks similarly controllable benchmark generators. This proposal outlines a research project to: (1) implement GNBG in Rust using WebGPU (wgpu) for massive GPU parallelization, and (2) extend GNBG to multi-objective optimization while maintaining its core strengths of controllable problem characteristics. The GPU implementation will enable benchmarking at unprecedented scales, supporting research into novel geometric approaches and other advanced methods for extreme many-objective optimization. We demonstrate how GNBG's component-based architecture naturally maps to GPU compute shaders, potentially achieving 100-1000x speedups over CPU implementations.
 
 **Keywords:** GNBG, Multi-objective Optimization, GPU Computing, WebGPU, Benchmarking, Many-objective Optimization
 
@@ -242,9 +242,9 @@ Comprehensive benchmarking across:
 - Problem scales (10-15,000 objectives)
 - Population sizes (100-100,000 solutions)
 
-## Case Study: Hyperspherical Fitness Functions
+## Case Study: Novel Geometric Fitness Functions
 
-The GPU-accelerated GNBG-MO will enable testing of novel algorithms like hyperspherical fitness functions that map multi-objective problems to unit hyperspheres, requiring evaluation of thousands of objectives for meaningful arctic circle reference point distributions.
+The GPU-accelerated GNBG-MO will enable testing of novel algorithms that employ advanced geometric transformations for many-objective optimization, requiring evaluation of thousands of objectives for meaningful convergence analysis and reference point distributions.
 
 # Expected Outcomes
 

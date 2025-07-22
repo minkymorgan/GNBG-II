@@ -7,7 +7,7 @@
 
 ## Abstract
 
-We have successfully implemented a GPU-accelerated version of the Generalized Numerical Benchmark Generator (GNBG) using Rust and WebGPU, achieving 6.8-12.1x performance improvements over CPU implementations while maintaining perfect numerical consistency. This progress report demonstrates the feasibility and success of GPU acceleration for GNBG evaluation, validating our core architectural approach. We now propose collaboration with the original GNBG authors to extend this foundation toward multi-objective optimization (GNBG-MO), which would address critical gaps in extreme many-objective benchmarking (100-15,000 objectives). Our implementation provides a solid foundation for this extension while respecting the original design principles and maintaining compatibility. This work directly supports our research into novel hyperspherical fitness algorithms that require extreme-scale benchmarking capabilities. We invite the GNBG community to collaborate on this natural evolution of the framework.
+We have successfully implemented a GPU-accelerated version of the Generalized Numerical Benchmark Generator (GNBG) using Rust and WebGPU, achieving 6.8-12.1x performance improvements over CPU implementations while maintaining perfect numerical consistency. This progress report demonstrates the feasibility and success of GPU acceleration for GNBG evaluation, validating our core architectural approach. We now propose collaboration with the original GNBG authors to extend this foundation toward multi-objective optimization (GNBG-MO), which would address critical gaps in extreme many-objective benchmarking (100-15,000 objectives). Our implementation provides a solid foundation for this extension while respecting the original design principles and maintaining compatibility. This work directly supports our research into novel geometric optimization algorithms that require extreme-scale benchmarking capabilities. We invite the GNBG community to collaborate on this natural evolution of the framework.
 
 **Keywords:** GNBG, Multi-objective Optimization, GPU Computing, WebGPU, Benchmarking, Many-objective Optimization
 
@@ -29,7 +29,7 @@ This project proposes to address these gaps through:
 
 1. **✅ GPU Implementation** (COMPLETED): Successfully ported GNBG to Rust/WebGPU with validated performance gains
 2. **🤝 Multi-objective Extension** (COLLABORATION OPPORTUNITY): Develop GNBG-MO in partnership with original authors
-3. **🎯 Extreme Scale Benchmarking** (RESEARCH APPLICATION): Support hyperspherical fitness algorithm development
+3. **🎯 Extreme Scale Benchmarking** (RESEARCH APPLICATION): Support novel geometric algorithm development
 4. **🌍 Open Source Framework** (COMMUNITY BENEFIT): Provide validated, cross-platform GPU acceleration
 
 # Current Progress and Achievements
@@ -60,14 +60,14 @@ Our implementation confirms that GNBG's component-based architecture maps excell
 - Memory access patterns are efficiently coalesced
 - Workgroup optimization scales with problem complexity
 
-## Research Motivation: pyZenkai HF1 Algorithm
+## Research Motivation: pyZenkai Geometric Algorithm
 
-This GPU acceleration directly supports our research into **Hyperspherical Fitness (HF1)** algorithms for extreme many-objective optimization. HF1 maps multi-objective problems to unit hyperspheres, requiring:
-- **Massive objective counts** (500-15,000) for meaningful arctic circle reference distributions
-- **Large population evaluations** (10,000+ individuals) for hypersphere convergence analysis  
+This GPU acceleration directly supports our research into **novel geometric optimization algorithms** for extreme many-objective optimization. Our methods employ advanced geometric transformations, requiring:
+- **Massive objective counts** (500-15,000) for meaningful convergence analysis
+- **Large population evaluations** (10,000+ individuals) for robust statistical validation  
 - **Controlled benchmark characteristics** to validate algorithmic behavior across different landscape types
 
-Without GPU acceleration, testing HF1 at these scales would be computationally prohibitive. Our GNBG GPU implementation provides the foundation, but multi-objective extension is essential for this research direction.
+Without GPU acceleration, testing these methods at extreme scales would be computationally prohibitive. Our GNBG GPU implementation provides the foundation, but multi-objective extension is essential for this research direction.
 
 # Background
 
@@ -258,9 +258,9 @@ Comprehensive benchmarking across:
 - Problem scales (10-15,000 objectives)
 - Population sizes (100-100,000 solutions)
 
-## Case Study: Hyperspherical Fitness Functions
+## Case Study: Novel Geometric Fitness Functions
 
-The GPU-accelerated GNBG-MO will enable testing of novel algorithms like hyperspherical fitness functions that map multi-objective problems to unit hyperspheres, requiring evaluation of thousands of objectives for meaningful arctic circle reference point distributions.
+The GPU-accelerated GNBG-MO will enable testing of novel algorithms that employ advanced geometric transformations for many-objective optimization, requiring evaluation of thousands of objectives for meaningful convergence analysis and reference point distributions.
 
 # Expected Outcomes
 
@@ -320,7 +320,7 @@ We have successfully demonstrated the feasibility and effectiveness of GPU-accel
 The success of our GPU implementation provides a solid foundation for multi-objective extension, but we believe this next phase would benefit tremendously from collaboration with the original GNBG authors. Their deep understanding of the framework's design principles, combined with our GPU acceleration expertise, could produce a multi-objective benchmark suite that maintains GNBG's parametric control philosophy while enabling research at unprecedented scales.
 
 **Research Impact:**
-This work directly enables our research into Hyperspherical Fitness (HF1) algorithms for extreme many-objective optimization, which requires the combination of controllable benchmark characteristics and massive computational scale that only a GPU-accelerated GNBG-MO could provide.
+This work directly enables our research into novel geometric algorithms for extreme many-objective optimization, which requires the combination of controllable benchmark characteristics and massive computational scale that only a GPU-accelerated GNBG-MO could provide.
 
 We respectfully invite the GNBG authors to collaborate on this natural evolution of their influential framework, ensuring it continues to serve the optimization community's growing needs for many-objective benchmarking capabilities.
 
@@ -339,7 +339,7 @@ We respectfully invite the GNBG authors to collaborate on this natural evolution
 - Cross-platform, open-source implementation ensuring broad accessibility
 
 **For Our Research:**
-- Validation platform for novel Hyperspherical Fitness algorithms
+- Validation platform for novel geometric optimization algorithms
 - Controlled benchmark characteristics essential for algorithmic analysis
 - Computational scale necessary for extreme many-objective research
 - Community-accepted benchmarking standard for research credibility
