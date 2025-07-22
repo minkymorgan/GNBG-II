@@ -353,7 +353,11 @@ GNBG-II/
 
 ## 📄 License
 
-This project maintains the same license as the original GNBG-II benchmark suite. GPU acceleration enhancements are provided as open-source contributions.
+This project is licensed under the GNU General Public License v3.0, maintaining consistency with the original GNBG-II benchmark suite. GPU acceleration enhancements are provided as open-source contributions under the same GPL v3.0 terms.
+
+**Original GNBG-II Authors:**
+- Danial Yazdani (danial.yazdani@gmail.com) - Copyright (c) 2023
+- Vladimir Stanovov (vladimirstanovov@yandex.ru) - C++ Implementation (2024)
 
 ## 🙏 Acknowledgments
 
