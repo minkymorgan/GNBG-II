@@ -47,6 +47,51 @@ pub struct PositionDistanceSplitter {
 }
 
 impl PositionDistanceSplitter {
+    /// Get number of position variables
+    pub fn n_position(&self) -> u32 {
+        self.n_position
+    }
+    
+    /// Get number of distance variables  
+    pub fn n_distance(&self) -> u32 {
+        self.n_distance
+    }
+    
+    /// Split solutions into position and distance variables
+    /// 
+    /// # Arguments
+    /// * `solutions` - Flattened array of solutions
+    /// 
+    /// # Returns
+    /// * Tuple of (position_vars, distance_vars) as separate Vec<f32>
+    pub fn split_variables(&self, solutions: &[f32]) -> Result<(Vec<f32>, Vec<f32>)> {
+        let n_solutions = solutions.len() / self.n_total as usize;
+        
+        if solutions.len() != n_solutions * self.n_total as usize {
+            return Err(GNBGMOError::DimensionMismatch {
+                expected: n_solutions * self.n_total as usize,
+                actual: solutions.len(),
+            });
+        }
+        
+        let mut position_vars = Vec::with_capacity(n_solutions * self.n_position as usize);
+        let mut distance_vars = Vec::with_capacity(n_solutions * self.n_distance as usize);
+        
+        for sol_idx in 0..n_solutions {
+            let sol_start = sol_idx * self.n_total as usize;
+            let solution = &solutions[sol_start..sol_start + self.n_total as usize];
+            
+            // Position variables come first
+            position_vars.extend_from_slice(&solution[0..self.n_position as usize]);
+            
+            // Distance variables come after
+            if self.n_distance > 0 {
+                distance_vars.extend_from_slice(&solution[self.n_position as usize..]);
+            }
+        }
+        
+        Ok((position_vars, distance_vars))
+    }
     /// Create a new splitter with the given strategy
     pub fn new(
         n_variables: u32, 

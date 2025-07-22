@@ -11,7 +11,7 @@ pub mod cache;
 use crate::multi_objective::{GNBGMOError, Result};
 
 /// Types of shape functions available
-#[derive(Debug, Clone, PartialEq, Hash)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum ShapeFunction {
     /// Linear Pareto front
     Linear,
@@ -46,7 +46,7 @@ impl ShapeFunctionExecutor {
     }
     
     /// Enable caching for shape functions
-    pub fn with_cache(mut self /* device: &wgpu::Device */) -> Self {
+    pub fn with_cache(self /* device: &wgpu::Device */) -> Self {
         // TODO: Initialize cache with GPU device
         // self.cache = Some(cache::ShapeFunctionCache::new(device));
         self

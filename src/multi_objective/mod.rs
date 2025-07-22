@@ -13,7 +13,8 @@ pub mod builder;
 pub mod mo_problem;
 
 // Re-export main types for convenience
-pub use builder::{GNBGMOBuilder, OptimizationTarget};
+pub use builder::GNBGMOBuilder;
+pub use position_distance::OptimizationTarget;
 pub use mo_problem::GNBGMultiObjective;
 pub use position_distance::{PositionDistanceSplitter, SplitStrategy};
 pub use transformations::TransformationType;

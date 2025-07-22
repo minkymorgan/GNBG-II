@@ -95,6 +95,14 @@ impl TransformationPipeline {
         self.stages.len() as u32
     }
     
+    /// Apply transformations to a batch of solutions (GPU implementation)
+    /// TODO: Implement when GPU infrastructure is ready
+    pub async fn apply_gpu_batch(&self, _solutions: &[f32], _n_position: u32) -> Result<Vec<f32>> {
+        Err(GNBGMOError::GpuExecutionError(
+            "GPU batch transformation not yet implemented".to_string()
+        ))
+    }
+    
     /// Apply transformations to a single solution (CPU implementation)
     pub fn apply_cpu(&self, solution: &mut [f32], n_position: usize) -> Result<()> {
         for stage in &self.stages {

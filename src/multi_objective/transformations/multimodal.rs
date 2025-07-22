@@ -18,9 +18,9 @@ use std::f32::consts::PI;
 /// 
 /// # Returns
 /// Transformed value in [0,1]
-pub fn multimodal_transform(y: f32, A: f32, B: f32, C: f32) -> f32 {
+pub fn multimodal_transform(y: f32, A: f32, _B: f32, C: f32) -> f32 {
     let tmp = 2.0 * y - 1.0;
-    let a = 0.35;
+    let _a = 0.35;
     let b = 0.001;
     
     let cosine_term = (A * PI * tmp).cos();
@@ -42,11 +42,11 @@ pub fn multimodal_transform(y: f32, A: f32, B: f32, C: f32) -> f32 {
 /// 
 /// # Returns
 /// Transformed value in [0,1] 
-pub fn wfg_multimodal_transform(y: f32, num_modes: u32, hill_size: f32) -> f32 {
+pub fn wfg_multimodal_transform(y: f32, num_modes: u32, _hill_size: f32) -> f32 {
     let tmp = 2.0 * y - 1.0;
-    let a = 0.35;
+    let _a = 0.35;
     let b = 0.001;
-    let c = 0.05;
+    let _c = 0.05;
     
     let modes_f32 = num_modes as f32;
     let cosine_term = (modes_f32 * PI * tmp).cos();
