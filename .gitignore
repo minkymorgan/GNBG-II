@@ -42,3 +42,4 @@ test_*.py
 .vscode/
 .idea/
 .envrc
+_gnbg_mo_proposal_*.md
