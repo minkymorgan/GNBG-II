@@ -20,6 +20,7 @@ pub mod gpu_executor;
 pub mod cpu_reference;
 pub mod file_loader;
 pub mod shaders;
+pub mod multi_objective;
 
 #[cfg(feature = "python")]
 pub mod python_bindings;
@@ -28,3 +29,6 @@ pub use data_structures::*;
 pub use gpu_executor::*;
 pub use cpu_reference::*;
 pub use file_loader::*;
+
+// Re-export multi-objective types for convenience
+pub use multi_objective::{GNBGMOBuilder, GNBGMultiObjective, OptimizationTarget};
