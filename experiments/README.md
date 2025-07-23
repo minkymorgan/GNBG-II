@@ -23,7 +23,7 @@ Edit the configuration section in `gnbg_mo_benchmark.py` to adjust:
 
 - Objective ranges (default: 10-100 step 10, 100-500 step 50)
 - Number of runs per configuration (default: 31)
-- Problem types (GF1, GF2, GF3 - GPU Multi-Objective Functions)
+- Problem types (GF1-GF24 available - GPU Multi-Objective Functions mapping to GNBG F1-F24)
 - Algorithm parameters
 
 ## Extreme Scaling Test
@@ -43,6 +43,23 @@ Results are saved to the `results/` directory:
 ## GPU Acceleration
 
 The benchmark automatically uses GPU acceleration when available. Check the GPU column in results to verify acceleration is active.
+
+## Selecting GNBG Functions
+
+To test different GNBG functions, modify the problem configuration:
+
+```python
+# Test specific functions (e.g., challenging multimodal problems)
+GNBG_MO_PROBLEMS = ["GF16", "GF17", "GF24"]  # Multi-component functions
+
+# Test unimodal functions
+GNBG_MO_PROBLEMS = ["GF1", "GF2", "GF3"]     # Well-conditioned to ill-conditioned
+
+# Test single-component multimodal
+GNBG_MO_PROBLEMS = ["GF7", "GF9", "GF15"]    # Various multimodal landscapes
+```
+
+See the main README for complete GF1-GF24 function characteristics and mapping to GNBG F1-F24.
 
 ## Adding More Algorithms
 

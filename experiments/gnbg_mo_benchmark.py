@@ -42,6 +42,8 @@ ALGORITHMS = ["NSGA2"]                          # Standard algorithm
 # ALGORITHMS = ["NSGA2", "NSGA3"]              # Uncomment to include NSGA3
 
 # GNBG-MO PROBLEM SETTINGS  
+# Available: GF1-GF24 (maps to GNBG F1-F24 functions)
+# GF1-GF6: Unimodal, GF7-GF15: Single-component multimodal, GF16-GF24: Multi-component
 GNBG_MO_PROBLEMS = ["GF1", "GF2", "GF3"]        # GPU Multi-Objective Function variants
 
 # EXPERIMENT EXECUTION SETTINGS
