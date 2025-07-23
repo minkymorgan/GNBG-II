@@ -147,3 +147,23 @@ No formal test suite exists. Validation approach:
 - Winner algorithms in `Winner_Algorithms/` for reference
 - Rust GPU uses f32 for compute, f64 for CPU validation
 - MATLAB uses midpoint-target boundary repair strategy
+
+## Proprietary Algorithm Protection
+
+**CRITICAL**: This repository has PUBLIC and PRIVATE components:
+
+### PUBLIC (Safe to commit):
+- NSGA2, NSGA3 algorithms only
+- Basic multi-objective benchmarking demonstrations
+- GPU acceleration infrastructure
+- NO references to HF1, HF3, rHF3, or hyperspherical fitness concepts
+- NO proprietary analysis methods
+
+### PRIVATE (NEVER commit):
+- Keep in `experiments/private/` or similar (add to .gitignore)
+- HF1, HF3, rHF3 algorithm implementations
+- Hyperspherical fitness analysis and ranking
+- Any competitive advantage code
+- Research results before publication
+
+**IMPORTANT**: When creating experiments or examples, ensure NO variable names, comments, or code hints at the existence of hyperspherical fitness algorithms. The public repository should only demonstrate standard multi-objective optimization algorithms.

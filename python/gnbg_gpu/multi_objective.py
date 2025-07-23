@@ -179,6 +179,18 @@ class GNBGMultiObjectiveProblem:
         """Problem name"""
         return self._problem.name
     
+    def has_bounds(self) -> bool:
+        """PyMOO compatibility: indicate that the problem has bounds"""
+        return self._problem.has_bounds
+    
+    def has_constraints(self) -> bool:
+        """PyMOO compatibility: indicate that the problem has constraints"""
+        return False  # GNBG-MO problems don't have constraints
+    
+    def bounds(self):
+        """PyMOO compatibility: return variable bounds as (xl, xu) tuple"""
+        return self.xl, self.xu
+    
     def _evaluate(self, X: np.ndarray) -> Dict[str, np.ndarray]:
         """
         Evaluate solutions (PyMOO interface)
@@ -189,7 +201,32 @@ class GNBGMultiObjectiveProblem:
         Returns:
             Dictionary with 'F' key containing objectives array of shape (n_solutions, n_obj)
         """
+        # Convert to float32 if needed (GNBG-MO expects float32)
+        if X.dtype != np.float32:
+            X = X.astype(np.float32)
         return self._problem._evaluate(X)
+    
+    def evaluate(self, X: np.ndarray, return_values_of=None, return_as_dictionary=False, **kwargs):
+        """
+        PyMOO evaluate method that calls _evaluate internally
+        
+        Args:
+            X: Array of shape (n_solutions, n_var) with solutions to evaluate
+            return_values_of: List of values to return (e.g., ['F'])
+            return_as_dictionary: Whether to return as dictionary
+            
+        Returns:
+            Objectives array or dictionary based on return_as_dictionary
+        """
+        if return_values_of is None:
+            return_values_of = ['F']
+            
+        result = self._evaluate(X)
+        
+        if return_as_dictionary:
+            return {key: result[key] for key in return_values_of if key in result}
+        else:
+            return result['F']  # Return just the objectives array
     
     def evaluate_single(self, solution: Union[List[float], np.ndarray]) -> np.ndarray:
         """

@@ -43,3 +43,11 @@ test_*.py
 .idea/
 .envrc
 _gnbg_mo_proposal_*.md
+
+# Private experiments (contains proprietary algorithms)
+experiments/private/
+experiments/nsga2_hf1_results/
+experiments/*hf1*.py
+experiments/*HF1*.py
+experiments/minimal_hf1_test.py
+experiments/test_hf1_integration.py
